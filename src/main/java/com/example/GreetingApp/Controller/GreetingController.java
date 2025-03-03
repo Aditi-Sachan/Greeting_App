@@ -42,6 +42,13 @@ public class GreetingController {
     public String getGreeting() {
         return greetingService.getGreeting();
     }
+
+    @GetMapping
+    public String getGreeting(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName) {
+        return greetingService.getGreeting(firstName, lastName);
+    }
 }
 
 
