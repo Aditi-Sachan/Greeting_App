@@ -97,5 +97,16 @@ public class GreetingService {
             return "Greeting not found for ID: " + id;
         }
     }
+
+    //UC8
+    // ✅ New Method: Delete Greeting by ID
+    public String deleteGreeting(Long id) {
+        if (greetingRepository.existsById(id)) {
+            greetingRepository.deleteById(id);
+            return "Deleted Greeting ID: " + id;
+        } else {
+            return "Greeting not found for ID: " + id;
+        }
+    }
 }
 
