@@ -4,6 +4,8 @@ import com.example.GreetingApp.Model.Greeting;
 import com.example.GreetingApp.Repository.GreetingRepository;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GreetingService {
@@ -30,49 +32,55 @@ public class GreetingService {
         } else {
             return "Hello World!";
         }
+    }
 
-         final GreetingRepository greetingRepository = null;
+    final GreetingRepository greetingRepository = null;
 
         // Constructor-based injection (Spring will inject repository)
     public GreetingService(GreetingRepository greetingRepository) {
-            this.greetingRepository = greetingRepository;
-        }
+        this.greetingRepository = greetingRepository;
+    }
 
-        public String getGreeting (String firstName, String lastName){
-            String message;
+    public String getGreeting (String firstName, String lastName) {
+        String message;
 
-            if (firstName != null && lastName != null) {
-                message = "Hello, " + firstName + " " + lastName + "!";
-            } else if (firstName != null) {
-                message = "Hello, " + firstName + "!";
-            } else if (lastName != null) {
-                message = "Hello, " + lastName + "!";
-            } else {
-                message = "Hello World!";
-            }
-
-            // ✅ Fix: Use 'new Greeting()' and ensure repository is injected
-            Greeting greeting = new Greeting(message);
-            greetingRepository.save(greeting);  // Save to database
-
-            return message;
+        if (firstName != null && lastName != null) {
+            message = "Hello, " + firstName + " " + lastName + "!";
+        } else if (firstName != null) {
+            message = "Hello, " + firstName + "!";
+        } else if (lastName != null) {
+            message = "Hello, " + lastName + "!";
+        } else {
+            message = "Hello World!";
         }
     }
+
+    // ✅ Fix: Use 'new Greeting()' and ensure repository is injected
+    Greeting greeting = new Greeting(message);
+    greetingRepository.save(greeting);  // Save to database
+    return message;
 
     //UC5
     // Save greeting to the database
     Greeting greeting = new Greeting(message);
     greeting = greetingRepository.save(greeting);
+    return "Saved Greeting ID: " + greeting.getId() + ", Message: " + greeting.getMessage();
 
-        return "Saved Greeting ID: " + greeting.getId() + ", Message: " + greeting.getMessage();
-}
 
-// ✅ New Method: Find Greeting by ID
-public String findGreetingById(Long id) {
-    Optional<Greeting> greeting = greetingRepository.findById(id);
-    return greeting.map(Greeting::getMessage)
-            .orElse("Greeting not found for ID: " + id);
-}
-}
+    // ✅ New Method: Find Greeting by ID
+    public String findGreetingById(Long id) {
+        Optional<Greeting> greeting = greetingRepository.findById(id);
+        return greeting.map(Greeting::getMessage)
+                .orElse("Greeting not found for ID: " + id);
+    }
 
+    //UC6
+    // ✅ New Method: Fetch All Greetings
+    public List<String> getAllGreetings() {
+        List<Greeting> greetings = greetingRepository.findAll();
+        return greetings.stream()
+                .map(greeting -> "ID: " + greeting.getId() + ", Message: " + greeting.getMessage())
+                .collect(Collectors.toList());
+    }
+}
 
