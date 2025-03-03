@@ -50,6 +50,12 @@ public class GreetingController {
             @RequestParam(required = false) String lastName) {
         return greetingService.getGreeting(firstName, lastName);
     }
+
+    // ✅ New Endpoint: Find Greeting by ID
+    @GetMapping("/{id}")
+    public String findGreetingById(@PathVariable Long id) {
+        return greetingService.findGreetingById(id);
+    }
 }
 
 

@@ -3,6 +3,7 @@ package com.example.GreetingApp.Service;
 import com.example.GreetingApp.Model.Greeting;
 import com.example.GreetingApp.Repository.GreetingRepository;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 public class GreetingService {
@@ -57,6 +58,21 @@ public class GreetingService {
             return message;
         }
     }
+
+    //UC5
+    // Save greeting to the database
+    Greeting greeting = new Greeting(message);
+    greeting = greetingRepository.save(greeting);
+
+        return "Saved Greeting ID: " + greeting.getId() + ", Message: " + greeting.getMessage();
+}
+
+// ✅ New Method: Find Greeting by ID
+public String findGreetingById(Long id) {
+    Optional<Greeting> greeting = greetingRepository.findById(id);
+    return greeting.map(Greeting::getMessage)
+            .orElse("Greeting not found for ID: " + id);
+}
 }
 
 
