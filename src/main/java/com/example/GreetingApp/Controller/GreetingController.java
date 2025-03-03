@@ -63,6 +63,12 @@ public class GreetingController {
     public List<String> getAllGreetings() {
         return greetingService.getAllGreetings();
     }
+
+    // ✅ New Endpoint: Update Greeting by ID
+    @PutMapping("/{id}")
+    public String updateGreeting(@PathVariable Long id, @RequestParam String newMessage) {
+        return greetingService.updateGreeting(id, newMessage);
+    }
 }
 
 

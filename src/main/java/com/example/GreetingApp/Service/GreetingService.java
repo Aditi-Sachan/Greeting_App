@@ -82,5 +82,20 @@ public class GreetingService {
                 .map(greeting -> "ID: " + greeting.getId() + ", Message: " + greeting.getMessage())
                 .collect(Collectors.toList());
     }
+
+    //UC7
+    // ✅ New Method: Update Greeting by ID
+    public String updateGreeting(Long id, String newMessage) {
+        Optional<Greeting> optionalGreeting = greetingRepository.findById(id);
+
+        if (optionalGreeting.isPresent()) {
+            Greeting greeting = optionalGreeting.get();
+            greeting.setMessage(newMessage);
+            greetingRepository.save(greeting);
+            return "Updated Greeting ID: " + id + " to: " + newMessage;
+        } else {
+            return "Greeting not found for ID: " + id;
+        }
+    }
 }
 
