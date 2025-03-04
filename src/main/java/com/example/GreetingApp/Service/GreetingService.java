@@ -3,18 +3,13 @@ package com.example.GreetingApp.Service;
 import com.example.GreetingApp.Model.Greeting;
 import com.example.GreetingApp.Repository.GreetingRepository;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class GreetingService {
-
-
-    public String getGreeting() {
-        return "Hello World";
-    }
-
 
     private final GreetingRepository greetingRepository;
 
@@ -22,28 +17,14 @@ public class GreetingService {
         this.greetingRepository = greetingRepository;
     }
 
+    // ✅ Method 1: Default Greeting
+    public String getGreeting() {
+        return "Hello World";
+    }
+
+    // ✅ Method 2: Personalized Greeting (Fix: Removed duplicate method)
     public String getGreeting(String firstName, String lastName) {
-        if (firstName != null && lastName != null) {
-            return "Hello, " + firstName + " " + lastName + "!";
-        } else if (firstName != null) {
-            return "Hello, " + firstName + "!";
-        } else if (lastName != null) {
-            return "Hello, " + lastName + "!";
-        } else {
-            return "Hello World!";
-        }
-    }
-
-    final GreetingRepository greetingRepository = null;
-
-        // Constructor-based injection (Spring will inject repository)
-    public GreetingService(GreetingRepository greetingRepository) {
-        this.greetingRepository = greetingRepository;
-    }
-
-    public String getGreeting (String firstName, String lastName) {
         String message;
-
         if (firstName != null && lastName != null) {
             message = "Hello, " + firstName + " " + lastName + "!";
         } else if (firstName != null) {
@@ -53,29 +34,22 @@ public class GreetingService {
         } else {
             message = "Hello World!";
         }
+
+        // ✅ Save the greeting to the database
+        Greeting greeting = new Greeting(message);
+        greeting = greetingRepository.save(greeting);
+
+        return "Saved Greeting ID: " + greeting.getId() + ", Message: " + greeting.getMessage();
     }
 
-    // ✅ Fix: Use 'new Greeting()' and ensure repository is injected
-    Greeting greeting = new Greeting(message);
-    greetingRepository.save(greeting);  // Save to database
-    return message;
-
-    //UC5
-    // Save greeting to the database
-    Greeting greeting = new Greeting(message);
-    greeting = greetingRepository.save(greeting);
-    return "Saved Greeting ID: " + greeting.getId() + ", Message: " + greeting.getMessage();
-
-
-    // ✅ New Method: Find Greeting by ID
+    // ✅ Method 3: Find Greeting by ID (UC5)
     public String findGreetingById(Long id) {
         Optional<Greeting> greeting = greetingRepository.findById(id);
         return greeting.map(Greeting::getMessage)
                 .orElse("Greeting not found for ID: " + id);
     }
 
-    //UC6
-    // ✅ New Method: Fetch All Greetings
+    // ✅ Method 4: Fetch All Greetings (UC6)
     public List<String> getAllGreetings() {
         List<Greeting> greetings = greetingRepository.findAll();
         return greetings.stream()
@@ -83,11 +57,9 @@ public class GreetingService {
                 .collect(Collectors.toList());
     }
 
-    //UC7
-    // ✅ New Method: Update Greeting by ID
+    // ✅ Method 5: Update Greeting by ID (UC7)
     public String updateGreeting(Long id, String newMessage) {
         Optional<Greeting> optionalGreeting = greetingRepository.findById(id);
-
         if (optionalGreeting.isPresent()) {
             Greeting greeting = optionalGreeting.get();
             greeting.setMessage(newMessage);
@@ -98,8 +70,7 @@ public class GreetingService {
         }
     }
 
-    //UC8
-    // ✅ New Method: Delete Greeting by ID
+    // ✅ Method 6: Delete Greeting by ID (UC8)
     public String deleteGreeting(Long id) {
         if (greetingRepository.existsById(id)) {
             greetingRepository.deleteById(id);

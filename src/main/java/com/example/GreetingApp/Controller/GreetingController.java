@@ -2,37 +2,11 @@ package com.example.GreetingApp.Controller;
 
 import org.springframework.web.bind.annotation.*;
 import com.example.GreetingApp.Service.GreetingService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
 @RequestMapping("/greeting")
 public class GreetingController {
-
-
-    @GetMapping
-    public String getGreeting() {
-     return "{\"message\":\"Hello, this is a GET request!\"}";
-     }
-
-
-    @PostMapping
-    public String postGreeting(@RequestBody String request) {
-        return "{\"message\":\"Hello, this is a POST request!\", \"received\":\"" + request + "\"}";
-    }
-    @PutMapping
-    public String putGreeting(@RequestBody String request) {
-        return "{\"message\":\"Hello, this is a PUT request!\", \"updated\":\"" + request + "\"}";
-    }
-
-
-    @DeleteMapping
-    public String deleteGreeting() {
-
-        return "{\"message\":\"Hello, this is a DELETE request!\"}";
-    }
 
     private final GreetingService greetingService;
 
@@ -40,11 +14,7 @@ public class GreetingController {
         this.greetingService = greetingService;
     }
 
-    @GetMapping
-    public String getGreeting() {
-        return greetingService.getGreeting();
-    }
-
+    // ✅ Unified `@GetMapping` to handle both cases
     @GetMapping
     public String getGreeting(
             @RequestParam(required = false) String firstName,
@@ -75,6 +45,23 @@ public class GreetingController {
     public String deleteGreeting(@PathVariable Long id) {
         return greetingService.deleteGreeting(id);
     }
+
+    // ✅ Keep other mappings
+    @PostMapping
+    public String postGreeting(@RequestBody String request) {
+        return "{\"message\":\"Hello, this is a POST request!\", \"received\":\"" + request + "\"}";
+    }
+
+    @PutMapping
+    public String putGreeting(@RequestBody String request) {
+        return "{\"message\":\"Hello, this is a PUT request!\", \"updated\":\"" + request + "\"}";
+    }
+
+    @DeleteMapping
+    public String deleteGreeting() {
+        return "{\"message\":\"Hello, this is a DELETE request!\"}";
+    }
 }
+
 
 
