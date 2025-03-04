@@ -18,6 +18,7 @@ public class GreetingService {
     }
 
     // ✅ Method 1: Default Greeting
+    @SuppressWarnings("unused")
     public String getGreeting() {
         return "Hello World";
     }
